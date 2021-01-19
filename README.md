@@ -17,27 +17,28 @@ A rasperry pi (rpi) project to record and tweet X second spoken blurbs
 
 ### Getting Started
 #### Assumptions
-A familiarity with git, creating/deleting branches, committing to a branch, push to remote branches etc.
-A vague familiarity with networking (ipv4, ipv6, ip address, mac address)
-A vague familiarity with SSH and public/private keys
+A familiarity with git, creating/deleting branches, committing to a branch, push to remote branches etc.  
+A vague familiarity with networking (ipv4, ipv6, ip address, mac address)  
+A vague familiarity with SSH and public/private keys  
 
-#### Setting up Raspberry Pi
-Make a bootable sd card for the raspberry pi (rpi)
-Update sd card to connect to the network
-Update sd card to enable SSHing on the rpi
-Using your router (or other tools), determine the IP address and mac address of the rpi, eg:
-`sudo apt-get install arp-scan`
-`sudo arp-scan --localnet`
-Find the rpi IP in the list, [export that IP address as an environment variable](https://linuxize.com/post/how-to-set-and-list-environment-variables-in-linux/) on your (Unix-based) PC, eg:
-`export RPI_IP=192.168.X.X`
-Either connect the raspberry pi to a monitor and control it as a computer, or begin an SSH session with the rpi.
-Remembering that default Rasbian OS has a root user of ['pi' and a password of 'raspberry'](https://pimylifeup.com/default-raspbian-username-and-password/)
-From your PC run:
-`ssh pi@$RPI_IP`
-Once an SSH session has been initiated between your PC and the rpi, [create a new user](https://raspberrytips.com/new-user-on-raspberry-pi/) on the rpi to use going forward:
-`sudo adduser <username> sudo # Creates a user and enables them to perform sudo actions`
-Set a password for the new user.
-This will be the user that the rpi will run the python code as now.
+#### Setting up Raspberry Pi  
+Make a bootable sd card for the raspberry pi (rpi)  
+Update sd card to connect to the network  
+Update sd card to enable SSHing on the rpi  
+Using your router (or other tools), determine the IP address and mac address of the rpi, eg:  
+`sudo apt-get install arp-scan`  
+`sudo arp-scan --localnet`  
+Find the rpi IP in the list, [export that IP address as an environment variable](https://linuxize.com/post/how-to-set-and-list-environment-variables-in-linux/) on your (Unix-based) PC, eg:  
+`export RPI_IP=192.168.X.X`  
+Either connect the raspberry pi to a monitor and control it as a computer, or begin an SSH session with the rpi.  
+Remembering that default Rasbian OS has a root user of ['pi' and a password of 'raspberry'](https://pimylifeup.com/default-raspbian-username-and-password/)  
+From your PC run:  
+`ssh pi@$RPI_IP`  
+Once an SSH session has been initiated between your PC and the rpi, [create a new user](https://raspberrytips.com/new-user-on-raspberry-pi/) on the rpi to use going forward:  
+`sudo adduser <username> sudo # Creates a user and enables them to perform sudo actions`  
+Set a password for the new user. 
+This will be the user that the rpi will run the python code as now. 
+Update 
 
 Install python3 on the rpi, eg:
 `sudo apt update`
@@ -47,10 +48,25 @@ On your PC, export the username as an environment variable `RPI_USER`, eg:
 And [create an alias](https://www.tecmint.com/create-alias-in-linux/) to facilitate sshing into the rpi from your PC's terminal:
 `alias ssh_rpi='ssh "$RPI_USER"@"$RPI_IP"'`
 
+And/or update your the /etc/hosts file on your development machine to add a line aliasing the Pi's IP address for easier sshing, adding:
+`196.168.0.### pi`  
+
 Confirm all the appropriate environment variables and aliases have been set on your PC:
 `echo $RPI_IP`
 `echo $RPI_USER`
 `which ssh_rpi`
+
+Generate an SSH key on your dev machine. The public key needs to be copied to the Pi to enable sshing without providing a password every time.
+On development machine, if you don't have an ssh key in ~/.ssh/ then, on your dev machine, run:  
+`ssh-keygen -t rsa`
+
+Copy your public key from your dev machine to your list of known hosts on your pi, from your dev machine run:
+`ssh-copy-id username@pi`
+
+SSH into your Pi as the user you created:  
+`ssh username@pi` (if you've updated the /etc/hosts file)
+
+
 
 Fork this repo to have your own copy of the code
 Clone your forked repo to your PC, eg:

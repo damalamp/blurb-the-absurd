@@ -1,0 +1,3 @@
+django-commands==0.7
+ifaddr==0.1.7
+PyAudio==0.2.11
