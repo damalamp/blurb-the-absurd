@@ -36,8 +36,8 @@ To ssh into  your pi from your PC run:
 `ssh pi@$RPI_IP`  
 Once an SSH session has been initiated between your PC and the rpi, [create a new user](https://raspberrytips.com/new-user-on-raspberry-pi/) on the rpi to use going forward:  
 `sudo adduser <username> sudo # Creates a user and enables them to perform sudo actions`  
-`sudo usermod -aG sound <username> # to give <username> permissions to record and play audio with audio devices attached to the rpi`
-
+`sudo usermod -aG sound,gpio <username> # to give <username> permissions to 1) record and play audio with audio devices attached to the rpi and 2) Control GPIO pins`
+``
 Confirm user was added to 'audio' group:
 `groups <username>`
 
@@ -71,8 +71,10 @@ Copy your PC's public key to your rpi's list of known hosts, from your PC run:
 SSH into your Pi as the user you created:  
 `ssh $RPI_USER@pi` (if you've updated the /etc/hosts file)
 
-Once sshed into the pi, install portaudio for recording functionality on the pi:
-`sudo apt-get install portaudio19-dev`
+Once sshed into the pi, install:
+Portaudio for recording functionality on the pi: `sudo apt-get install portaudio19-dev`
+RPi.GPIO for controlling the GPIO pins: `sudo apt-get install python-rpi.gpio`
+
 
 To transcribe audio you will need a google cloud account to transcribe audio recorded by your pi (TODO: explore using [Jasper](https://jasperproject.github.io)). 
 Create a [google cloud account (GC)](https://support.google.com/a/answer/7389973?hl=en&ref_topic=7386475) to use their voice-to-text cloud API.
