@@ -1,5 +1,5 @@
 ### blurb-the-absurd
-A rasperry pi (rpi) project to record and tweet X second spoken blurbs
+A raspperry pi (pi) project to record and tweet X second spoken blurbs
 
 ### Project Road map
 1. Setup raspberry pi to be available on the network
@@ -36,6 +36,11 @@ To ssh into  your pi from your PC run:
 `ssh pi@$RPI_IP`  
 Once an SSH session has been initiated between your PC and the rpi, [create a new user](https://raspberrytips.com/new-user-on-raspberry-pi/) on the rpi to use going forward:  
 `sudo adduser <username> sudo # Creates a user and enables them to perform sudo actions`  
+`sudo usermod -aG sound <username> # to give <username> permissions to record and play audio with audio devices attached to the rpi`
+
+Confirm user was added to 'audio' group:
+`groups <username>`
+
 Set a password for the new user. 
 This will be the user that the rpi will run the python code as now. 
 Update 
@@ -48,7 +53,7 @@ On your PC, export the username as an environment variable `RPI_USER`, eg:
 And [create an alias](https://www.tecmint.com/create-alias-in-linux/) to facilitate sshing into the rpi from your PC's terminal:
 `alias ssh_rpi='ssh "$RPI_USER"@"$RPI_IP"'`
 
-And/or update your the /etc/hosts file on your development machine to add a line aliasing the Pi's IP address for easier sshing, adding:
+And update the /etc/hosts file on your development machine to add a line aliasing the Pi's IP address for easier sshing, adding:
 `196.168.0.### pi`  
 
 Confirm all the appropriate environment variables and aliases have been set on your PC:
@@ -60,15 +65,32 @@ Generate an SSH key on your PC. The public key needs to be copied to the Pi to e
 On development machine, if you don't have an ssh key in ~/.ssh/ then, on your PC, run:  
 `ssh-keygen -t rsa`
 
-Copy your public key from your PC to your list of known hosts on your pi, from your PC run:
-`ssh-copy-id username@pi`
+Copy your PC's public key to your rpi's list of known hosts, from your PC run:
+`ssh-copy-id $RPI_USER@pi`
 
 SSH into your Pi as the user you created:  
-`ssh username@pi` (if you've updated the /etc/hosts file)
+`ssh $RPI_USER@pi` (if you've updated the /etc/hosts file)
+
+Once sshed into the pi, install portaudio for recording functionality on the pi:
+`sudo apt-get install portaudio19-dev`
+
+To transcribe audio you will need a google cloud account to transcribe audio recorded by your pi (TODO: explore using [Jasper](https://jasperproject.github.io)). 
+Create a [google cloud account (GC)](https://support.google.com/a/answer/7389973?hl=en&ref_topic=7386475) to use their voice-to-text cloud API.
+From your GC account, [go about getting a private json key](https://cloud.google.com/speech-to-text/docs/quickstart-protocol?hl=en_US).
+Once you've downloaded the generated key to you PC, copy it to your rpi:
+`rsync -auzr /path/to/downloaded/json/key $RPI_USER@pi:~/google-cloud-api-key.json`
+
+And on the rpi, export an environment variable pointing to that json key's location. Add the following to  your ~/.bashrc or ~/.zshrc:
+`export GOOGLE_APPLICATION_CREDENTIALS=/home/<username>/google-cloud-api-key.json`
 
 Fork this repo to have your own copy of the code
 Clone your forked repo to your PC, eg:
 `git clone git@github.com:<your-github-account>/blurb-the-absurd.git`
 
+https://raspberrypi.stackexchange.com/questions/9951/pyaudio-recording-sound-on-pi-getting-errors
 On your PC, run the `./deploy.sh` script (from this repo) to copy and run the files on your pi:  
 `./deploy.sh`
+
+If you get ALSA errors when executing PyAudio, [try this](https://stackoverflow.com/questions/7088672/pyaudio-working-but-spits-out-error-messages-each-time).
+
+https://stackoverflow.com/questions/7088672/pyaudio-working-but-spits-out-error-messages-each-time 
