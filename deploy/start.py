@@ -1,12 +1,14 @@
 import blurb_recorder as recorder
-import voice_recognition_api as transcriber
+from voice_recognition_api import transcribe_file
+from twitter_api import tweeter
 
 print('Recording Starting...')
 recording_path = recorder.record_for_seconds(10)
 
 print('Sending file for transcription...')
-transcription = transcriber.transcribe_file(recording_path)
+transcription = transcribe_file(recording_path)
 
 print(f"Transcription result: {transcription}")
 
-# Next: Send transcription text to be tweeted...
+print('Sending transcription to be tweeted')
+tweeter(transcription)

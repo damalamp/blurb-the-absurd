@@ -3,8 +3,8 @@ def transcribe_file(recording_path):
     from google.cloud import speech
     import io
     import os
+    import sys
 
-    # print(f"ZZZ os env: {os.environ['GOOGLE_APPLICATION_CREDENTIALS']}")
     home_path = os.environ['HOME']
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = f"{home_path}/google-cloud-api-key.json"
 
@@ -23,8 +23,12 @@ def transcribe_file(recording_path):
     # Send audio to GCP for transcription.
     response = client.recognize(config=config, audio=audio)
 
-    # Response contains a list of transcrption chunks, since the audio recording being transcribed should be short,
+    # Response contains a list of transcription chunks, since the audio recording being transcribed should be short,
     # return just the first result in the response.
+
+    if len(response.results) == 0:
+        print("ERROR: No results returned from transcription. Check if audio file recorded correctly.")
+        sys.exit(1)
     top_result = response.results[0].alternatives[0].transcript
 
     # For longer files, loop over response.results to build the full transcription text.

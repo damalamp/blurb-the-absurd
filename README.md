@@ -80,8 +80,21 @@ From your GC account, [go about getting a private json key](https://cloud.google
 Once you've downloaded the generated key to you PC, copy it to your rpi:
 `rsync -auzr /path/to/downloaded/json/key $RPI_USER@pi:~/google-cloud-api-key.json`
 
-And on the rpi, export an environment variable pointing to that json key's location. Add the following to  your ~/.bashrc or ~/.zshrc:
+On the pi, update the ~/.secrets file to export an environment variable pointing to that json key's location. Add the following to ~/.secrets on the pi:
 `export GOOGLE_APPLICATION_CREDENTIALS=/home/<username>/google-cloud-api-key.json`
+
+### Tweeting
+Make/Login with a twitter account and visit [twitter's developer portal](https://developer.twitter.com/en) to create a twitter project which is needed to be issued the tokens needed to post tweets from the pi.
+Having made a new twitter project, save the API Key, API Secret Key, and Bearer Token somewhere secure and NOT in your code.
+Also generate a read & write [Access Token and Access Token Secret](https://www.slickremix.com/docs/how-to-get-api-keys-and-tokens-for-twitter/) for this project.
+Finally add the keys/tokens to the ~/.secrets file on the pi ('Bearer Token' is not needed):
+`export TWITTER_API_KEY=1mtaXXXXXXXXXXXXXXXXx1dQL`
+`export TWITTER_API_SECRET=31K4KXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXvPG`
+`export TWITTER_ACCESS_TOKEN=10000000000000000-zXXXXXXXXXXXXXXXXXXXXXXy`
+`export TWITTER_ACCESS_TOKEN_SECRET=VfwXXXXXXXXXXXXXXXXXXXXXXXPoR`
+
+Having set these keys/tokens as environment variables on the pi, now these credentials can be used by the [TwitterAPI](https://github.com/geduldig/TwitterAPI) package.
+
 
 Fork this repo to have your own copy of the code
 Clone your forked repo to your PC, eg:
