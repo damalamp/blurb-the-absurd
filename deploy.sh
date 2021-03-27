@@ -6,4 +6,4 @@ if [ -z "$RPI_USER" ]; then echo "RPI_USER environment variable has not been set
 proj_dir="blurb-the-absurd"
 
 rsync -auzr ./deploy/* $RPI_USER@pi:~/${proj_dir}
-ssh $RPI_USER@pi './blurb-the-absurd/run.sh'
+ssh $RPI_USER@pi 'source ~/.secrets && ./blurb-the-absurd/run.sh'
