@@ -3,17 +3,20 @@ from TwitterAPI import TwitterAPI
 
 
 def tweeter(message: str):
-    print(f"ZZZ os.environ={os.environ}")
-    home_path = os.environ['HOME']
+    # Necessary keys to have been set for tweeting to work:
+    required_keys = ['TWITTER_API_KEY', 'TWITTER_API_SECRET', 'TWITTER_ACCESS_TOKEN', 'TWITTER_ACCESS_TOKEN_SECRET']
+    for required_key in required_keys:
+        try:
+            os.environ[required_key]
+        except KeyError:
+            print(f"Please set the environment variable {required_key}")
+
     twitter_api_key = os.environ['TWITTER_API_KEY']
     twitter_api_secret = os.environ['TWITTER_API_SECRET']
     twitter_access_token = os.environ['TWITTER_ACCESS_TOKEN']
     twitter_access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
-    print(f"twitter_api_key={twitter_api_key}\ntwitter_api_secret={twitter_api_secret}\n"
-          f"twitter_access_token={twitter_access_token}\ntwitter_access_token_secret={twitter_access_token_secret}")
-    print(f"ZZZ message = {message}")
-    # Using Twitter's v2 API
-    api = TwitterAPI(twitter_api_key, twitter_api_secret, twitter_access_token, twitter_access_token_secret)
 
+    # Using Twitter's v1.1 API to post a tweet
+    api = TwitterAPI(twitter_api_key, twitter_api_secret, twitter_access_token, twitter_access_token_secret)
     r = api.request('statuses/update', {'status': message})
     print('SUCCESS' if r.status_code == 200 else 'PROBLEM: ' + r.text)
