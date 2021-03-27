@@ -7,9 +7,7 @@ def transcribe_file(recording_path):
     # print(f"ZZZ os env: {os.environ['GOOGLE_APPLICATION_CREDENTIALS']}")
     home_path = os.environ['HOME']
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = f"{home_path}/google-cloud-api-key.json"
-    print('ZZZ Printing env vars:')
-    for k, v in os.environ.items():
-        print(f'{k}={v}')
+
     client = speech.SpeechClient()
 
     with io.open(recording_path, "rb") as audio_file:
@@ -18,14 +16,20 @@ def transcribe_file(recording_path):
     audio = speech.RecognitionAudio(content=content)
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=16000,
+        sample_rate_hertz=44100,
         language_code="en-US",
     )
 
+    # Send audio to GCP for transcription.
     response = client.recognize(config=config, audio=audio)
 
-    # Each result is for a consecutive portion of the audio. Iterate through
-    # them to get the transcripts for the entire audio file.
-    for result in response.results:
-        # The first alternative is the most likely one for this portion.
-        print(u"Transcript: {}".format(result.alternatives[0].transcript))
+    # Response contains a list of transcrption chunks, since the audio recording being transcribed should be short,
+    # return just the first result in the response.
+    top_result = response.results[0].alternatives[0].transcript
+
+    # For longer files, loop over response.results to build the full transcription text.
+    ## for result in response.results:
+    ##     # The first alternative is the most likely one for this portion.
+    ##     print(u"Transcript: {}".format(result.alternatives[0].transcript))
+
+    return top_result

@@ -53,7 +53,7 @@ On your PC, export the username as an environment variable `RPI_USER`, eg:
 And [create an alias](https://www.tecmint.com/create-alias-in-linux/) to facilitate sshing into the rpi from your PC's terminal:
 `alias ssh_rpi='ssh "$RPI_USER"@"$RPI_IP"'`
 
-And update your the /etc/hosts file on your development machine to add a line aliasing the Pi's IP address for easier sshing, adding:
+And update the /etc/hosts file on your development machine to add a line aliasing the Pi's IP address for easier sshing, adding:
 `196.168.0.### pi`  
 
 Confirm all the appropriate environment variables and aliases have been set on your PC:
