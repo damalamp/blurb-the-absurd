@@ -104,7 +104,9 @@ Clone your forked repo to your PC, eg:
 
 https://raspberrypi.stackexchange.com/questions/9951/pyaudio-recording-sound-on-pi-getting-errors
 On your PC, run the `./deploy.sh` script (from this repo) to copy and run the files on your pi:  
-`./deploy.sh`
+`./deploy.sh -f` for a fresh run and pip install
+or
+`./deploy.sh -s` to stop all running python3 processes named 'start.py'
 
 If you get ALSA errors when executing PyAudio, [try this](https://stackoverflow.com/questions/7088672/pyaudio-working-but-spits-out-error-messages-each-time).
 
