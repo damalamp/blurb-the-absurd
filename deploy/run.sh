@@ -1,4 +1,5 @@
 #! /bin/bash
+
 # See https://google.github.io/styleguide/shellguide.html for script help
 
 echo ${HOME}
