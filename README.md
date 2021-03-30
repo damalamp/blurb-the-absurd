@@ -1,8 +1,8 @@
-# blurb-the-absurd (@absurdblurb)
+# blurb-the-absurd (@absurdblurb)  
 
-###A raspberry pi (rpi) project to record and tweet 10 second spoken blurbs.
+###A raspberry pi (rpi) project to record and tweet 10 second spoken blurbs.  
 
-####Tools used
+####Tools used  
 - Raspberry Pi (rpi) capable of running python3 and connecting to wifi.
 - Linux/Unix based PC to control rpi
 - 3d printer for enclosure
