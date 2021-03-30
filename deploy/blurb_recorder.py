@@ -11,11 +11,13 @@ def record_for_seconds(record_seconds: int = 10, filename: str = 'recording.wav'
     # mono, change to 2 if you want stereo
     channels = 1
     # 44100 samples per second
-    sample_rate = 44100
+    # sample_rate = 44100
+    sample_rate = 48000
     # initialize PyAudio object
     p = pyaudio.PyAudio()
 
     # open stream object as input & output
+    print("Recording...")
     stream = p.open(format=stream_format,
                     channels=channels,
                     rate=sample_rate,
@@ -23,8 +25,7 @@ def record_for_seconds(record_seconds: int = 10, filename: str = 'recording.wav'
                     output=True,
                     frames_per_buffer=chunk)
     frames = []
-    print("Recording...")
-    for i in range(int(44100 / chunk * record_seconds)):
+    for i in range(int(sample_rate / chunk * record_seconds)):
         data = stream.read(chunk)
         frames.append(data)
     print("Finished recording.")

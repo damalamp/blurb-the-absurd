@@ -16,7 +16,7 @@ def transcribe_file(recording_path):
     audio = speech.RecognitionAudio(content=content)
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=44100,
+        sample_rate_hertz=48000,
         language_code="en-US",
     )
 
@@ -25,7 +25,7 @@ def transcribe_file(recording_path):
 
     # Response contains a list of transcription chunks, since the audio recording being transcribed should be short,
     # return just the first result in the response.
-
+    print(f"ZZZ response: {response.results}")
     if len(response.results) == 0:
         print("ERROR: No results returned from transcription. Check if audio file recorded correctly.")
         sys.exit(1)
