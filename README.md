@@ -1,43 +1,47 @@
 # blurb-the-absurd (@absurdblurb)
-####A raspberry pi (rpi) project to record and tweet 10 second spoken blurbs.
+
+###A raspberry pi (rpi) project to record and tweet 10 second spoken blurbs.
+
 ####Tools used
 - Raspberry Pi (rpi) capable of running python3 and connecting to wifi.
-- PC to control rpi
-- 3d printer for case
+- Linux/Unix based PC to control rpi
+- 3d printer for enclosure
 - 1 button, 
-- 2 x led lights
+- Red LED
+- Green LED
 - 2 x 300Ω resistors
 - 4 x wires
 - USB Microphone
 - Battery back to power rpi
 
-### Project Road map
-1. Setup raspberry pi to be available on the network
-2. Creating and configuring new <username> for code execution 
-2. Deploying code to rpi
+### Project Overview
+1. Setup raspberry pi (rpi) to be available on the network
+2. Creating and configuring new `<username>` for code execution
+2. Deploy code to the rpi
 3. Create developer accounts with:
    - [Google Cloud Platform (GCP)](https://cloud.google.com/) for transcribing recorded audio to text 
    - [Twitter](https://developer.twitter.com) for tweeting the transcribed text
 4. Storing GCP and Twitter credentials on rpi
 5. Configure rpi to run script on startup
 6. Add hardware button to rpi to trigger recording
-7. Print case for rpi, microphone, button and leds
+7. Print enclosure for rpi, microphone, button, leds, wires, and resistors
 
 ### Improvements for V2
 - Add speakers for simple auditory feedback
 - Store all tweet recordings and text in s3 or firebase
+
 ### Getting Started
 
 ---
 **NOTE**  
-Pay attention to the context for commands to be run: on your PC or on your rpi (via an ssh session).
+Pay attention to the context for commands to be run: on your (linux) PC or on your rpi (via an ssh session).
 ---
 #### Assumptions
-- A familiarity with git, creating/deleting branches, committing to a branch, pushing to a remote branches etc.  
-- A vague familiarity with networking (ipv4, ipv6, ip address, mac address)  
+- A familiarity with git, forking and cloning a repository (repo), etc.  
+- A vague familiarity with networking (ipv4, ip address)  
 - A vague familiarity with SSH and public/private keys  
 
-#### Setting up Raspberry Pi 
+### Setting up Raspberry Pi 
 ####On your PC:
 - Make a [bootable sd card](https://www.raspberrypi.org/documentation/installation/installing-images/) for the raspberry pi (rpi) 
 - Update sd card to [connect to your network](https://howchoo.com/g/ndy1zte2yjn/how-to-set-up-wifi-on-your-raspberry-pi-without-ethernet)
@@ -57,12 +61,13 @@ Pay attention to the context for commands to be run: on your PC or on your rpi (
 - [Change the password for the default 'pi' user](https://www.raspberrypi.org/forums/viewtopic.php?t=193620)
 - [Create a new user](https://raspberrytips.com/new-user-on-raspberry-pi/) on the pi to use going forward:
     - `sudo adduser <username> sudo # Creates a user and enables them to perform sudo actions  # don't forget your password`
-    - `sudo usermod -aG sound,gpio <username>  # to give <username> permissions to 1) record and play audio with audio devices attached to the pi and 2) Control GPIO pins`
-- Confirm <username> was added to 'audio' and 'gpio' groups:
+    - `sudo usermod -aG sound,gpio <username>` 
+      - to give `<username>` permissions to record and play audio with audio devices attached to the rpi and to control GPIO pins`
+- Confirm `<username>` was added to 'audio' and 'gpio' groups:
     - `groups <username>`
-- Change users from pi to your new <username>:
+- Change users from pi to your new `<username>`:
     - `su - <username>`
-- Ensure you're logged in as <username>:
+- Ensure you're logged in as `<username>`:
     - `whoami`
 - Install necessary tools/libraries, eg:
     - `sudo apt update`
@@ -75,7 +80,7 @@ The rest of this flow assumes all actions on the rpi are performed as `<username
 ---
 
 ####On your PC
-- export your newly created <username> as an environment variable `RPI_USER`, eg update `~/.bashrc` with: 
+- export your newly created `<username>` as an environment variable `RPI_USER`, eg update `~/.bashrc` with: 
     - `export RPI_USER=<username>`
 - [Create an alias](https://www.tecmint.com/create-alias-in-linux/) to facilitate sshing into the pi from your PC's terminal:
     - `alias ssh_rpi='ssh "$RPI_USER"@"$RPI_IP"'`
@@ -134,7 +139,7 @@ To transcribe audio you will need a Google Cloud Platform (GCP) account to trans
 - Clone your forked repo to your PC, eg:
     - `cd ~`
     - `git clone git@github.com:<your-github-account>/blurb-the-absurd.git`
-- Run the `./deploy.sh` script (from this repo) to copy the python code to the rpi's home directory of <username>:  
+- Run the `./deploy.sh` script (from this repo) to copy the python code to the rpi's home directory of `<username>`:  
     - If it's  your first time 'deploying' the code the the rpi, use: `./deploy.sh -f` flag for a *fresh* deploy (ie running `pip install`)
 
 ---
@@ -143,9 +148,10 @@ To stop all running processes of the python script on the rpi (instead of deploy
     - `./deploy.sh -s`
 ---
 
-## Setting up Pi to auto run script on boot-up
+### Setting up Pi to auto run script on boot-up
 Having now configured the rpi with the necessary GCP and Twitter credentials, as well as deploying the code the rpi, now we want to have the script run on the rpi [whenever the rpi boots up](https://www.wikihow.com/Execute-a-Script-at-Startup-on-the-Raspberry-Pi ).
-- On the rpi, create an `~/.envSecrets` file to hold your Twitter secrets:
+####On the rpi:
+- Create an `~/.envSecrets` file to hold your Twitter secrets:
 ```
 TWITTER_API_KEY=1mtaXXXXXXXXXXXXXXXXx1dQL
 TWITTER_API_SECRET=31K4KXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXvPG
@@ -153,9 +159,7 @@ TWITTER_ACCESS_TOKEN=10000000000000000-zXXXXXXXXXXXXXXXXXXXXXXy
 TWITTER_ACCESS_TOKEN_SECRET=VfwXXXXXXXXXXXXXXXXXXXXXXXPoR
 ```
 
-###Create a systemd service to run the python script on rpi boot-up:
-####On the rpi:
-- Create a new service file in systemd `/etc/systemd/system/blurb-the-absurd.service`
+- Create a systemd service to run the python script on rpi boot-up: `/etc/systemd/system/blurb-the-absurd.service`
 With these contents:
 ```
 [Unit]
@@ -180,7 +184,7 @@ WantedBy=multi-user.target
     - `sudo systemctl start blurb-the-absurd.service`
     - `sudo systemctl status blurb-the-absurd.service`
 
-# Wiring the button and LEDs
+## Wiring the button and LEDs
 The code expects the following pin numbers on a Raspberry Pi v4, you might need to change them in the code:
 - red led pin = 11
 - green led pin = 13
